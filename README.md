@@ -1,49 +1,62 @@
-AWS Infrastructure with Terraform
+# AWS Three-Tier Infrastructure with Terraform
 
 ![Terraform](https://img.shields.io/badge/Terraform-1.5+-7B42BC?logo=terraform&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-EC2%2520%257C%2520VPC%2520%257C%2520ALB%2520%257C%2520S3-FF9900?logo=amazonaws&logoColor=white)
-![Badge](https://img.shields.io/badge/License-MIT-blue.svg)
+![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20VPC%20%7C%20ALB%20%7C%20S3-FF9900?logo=amazonaws&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
 
-A production-ready three-tier cloud infrastructure deployed on AWS using Terraform. This project provisions a highly available web application with a multi-AZ setup, Application Load Balancer, and object storage. It demonstrates core cloud engineering principles: network isolation, high availability, fault tolerance, and Infrastructure as Code.
+A production-ready **three-tier cloud infrastructure** deployed on AWS using Terraform. This project provisions a highly available web application with a multi-AZ setup, Application Load Balancer, and object storage. It demonstrates core cloud engineering principles: network isolation, high availability, fault tolerance, and Infrastructure as Code.
 
+---
 
-📑 Table of Contents
-Architecture
+## 📑 Table of Contents
 
-Key Features
+- [Architecture](#-architecture)
+- [Key Features](#-key-features)
+- [Resources Created](#-resources-created)
+- [Prerequisites](#-prerequisites)
+- [Getting Started](#-getting-started)
+- [Variables](#-variables)
+- [Outputs](#-outputs)
+- [Security Configuration](#-security-configuration)
+- [Project Structure](#-project-structure)
+- [Design Decisions](#-design-decisions)
+- [Future Enhancements](#-future-enhancements)
+- [Author](#-author)
 
-Resources Created
+---
 
-Prerequisites
+## 🏗 Architecture
 
-Getting Started
-
-Variables
-
-Outputs
-
-Security Configuration
-
-Project Structure
-
-Design Decisions
-
-Future Enhancements
-
-Author
-
-
-🏗 Architecture
-
-The architecture follows a three-tier pattern:
-
-Presentation Tier: Application Load Balancer (ALB) that receives all user traffic.
-
-Application Tier: Two EC2 instances (web servers) spread across two Availability Zones for high availability.
-
-Data Tier: Amazon S3 bucket for storing static assets (images, files, etc.).
-
-All resources reside inside a dedicated VPC with public subnets, allowing outbound internet access through an Internet Gateway.
+```mermaid
+graph TB
+    Internet((Internet))
+    ALB[Application Load Balancer<br/>Internet-facing]
+    
+    subgraph VPC[VPC - 10.0.0.0/16]
+        subgraph AZ1[Availability Zone us-east-1a]
+            Sub1[Public Subnet<br/>10.0.0.0/24]
+            EC2_1[EC2 Web Server 1<br/>t2.micro]
+        end
+        subgraph AZ2[Availability Zone us-east-1b]
+            Sub2[Public Subnet<br/>10.0.1.0/24]
+            EC2_2[EC2 Web Server 2<br/>t2.micro]
+        end
+        IGW[Internet Gateway]
+        RT[Route Table<br/>0.0.0.0/0 → IGW]
+        SG[Security Group<br/>Allow HTTP:80, SSH:22]
+    end
+    
+    S3[S3 Bucket<br/>Static Assets]
+    
+    Internet --> ALB
+    ALB -->|HTTP :80| EC2_1
+    ALB -->|HTTP :80| EC2_2
+    EC2_1 & EC2_2 -->|HTTPS/HTTP| S3
+    Sub1 -.-> RT
+    Sub2 -.-> RT
+    RT --> IGW
+    IGW --> Internet
+    EC2_1 & EC2_2 -.-> SG
 
 
 ✨ Key Features
