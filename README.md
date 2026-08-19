@@ -1,4 +1,4 @@
-# AWS Three-Tier Infrastructure with Terraform
+# AWS Infrastructure with Terraform
 
 ![Terraform](https://img.shields.io/badge/Terraform-1.5+-7B42BC?logo=terraform&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20VPC%20%7C%20ALB%20%7C%20S3-FF9900?logo=amazonaws&logoColor=white)
@@ -58,36 +58,36 @@ graph TB
     EC2_1 & EC2_2 -.-> SG
 
 
-✨ Key Features
-High Availability: Instances deployed in two separate Availability Zones (us-east-1a and us-east-1b).
+# Key Features
 
-Load Balancing: Application Load Balancer distributes traffic evenly between the two instances, with health checks on /.
-
-Infrastructure as Code: Entire environment defined using Terraform, enabling repeatable deployments and version control.
-
-Network Isolation: Dedicated VPC, route tables, and security groups restrict access.
-
-Scalable Design: Easy to replace static EC2 instances with an Auto Scaling Group.
-
-Object Storage: S3 bucket provisioned for static content, decoupling storage from compute.
+- **High Availability**: Instances deployed in two separate Availability Zones (us-east-1a and us-east-1b).
+- **Load Balancing**: Application Load Balancer distributes traffic evenly between the two instances, with health checks on `/`.
+- **Infrastructure as Code**: Entire environment defined using Terraform, enabling repeatable deployments and version control.
+- **Network Isolation**: Dedicated VPC, route tables, and security groups restrict access.
+- **Scalable Design**: Easy to replace static EC2 instances with an Auto Scaling Group.
+- **Object Storage**: S3 bucket provisioned for static content, decoupling storage from compute.
+- **Auto-Healing**: Health checks ensure unhealthy instances are automatically taken out of rotation.
+- **Cost-Effective**: Using t2.micro instances and S3 keeps the environment within free tier limits.
 
 
-📦 Resources Created
-Resource Type	Name	Description
-aws_vpc	myvpc	Custom VPC with configurable CIDR (default 10.0.0.0/16)
-aws_subnet	sub1	Public subnet in us-east-1a (10.0.0.0/24)
-aws_subnet	sub2	Public subnet in us-east-1b (10.0.1.0/24)
-aws_internet_gateway	igw	Internet Gateway attached to VPC
-aws_route_table	RT	Route table with default route to Internet Gateway
-aws_route_table_association	rta1, rta2	Associates subnets with the route table
-aws_security_group	webSg	Security group allowing HTTP (80) and SSH (22) inbound
-aws_instance	webserver1	EC2 instance in subnet 1 (us-east-1a)
-aws_instance	webserver2	EC2 instance in subnet 2 (us-east-1b)
-aws_s3_bucket	example	S3 bucket for static assets
-aws_lb	myalb	Application Load Balancer (internet-facing)
-aws_lb_target_group	tg	Target group with HTTP health checks
-aws_lb_target_group_attachment	attach1, attach2	Registers EC2 instances with target group
-aws_lb_listener	listener	Forwards HTTP traffic from ALB to target group
+# Resources Created
+
+| Resource Type | Name | Description |
+|---------------|------|-------------|
+| `aws_vpc` | myvpc | Custom VPC with configurable CIDR (default `10.0.0.0/16`) |
+| `aws_subnet` | sub1 | Public subnet in `us-east-1a` (`10.0.0.0/24`) |
+| `aws_subnet` | sub2 | Public subnet in `us-east-1b` (`10.0.1.0/24`) |
+| `aws_internet_gateway` | igw | Internet Gateway attached to VPC |
+| `aws_route_table` | RT | Route table with default route to Internet Gateway |
+| `aws_route_table_association` | rta1, rta2 | Associates subnets with the route table |
+| `aws_security_group` | webSg | Security group allowing HTTP (80) and SSH (22) inbound |
+| `aws_instance` | webserver1 | EC2 instance in subnet 1 (us-east-1a) |
+| `aws_instance` | webserver2 | EC2 instance in subnet 2 (us-east-1b) |
+| `aws_s3_bucket` | example | S3 bucket for static assets |
+| `aws_lb` | myalb | Application Load Balancer (internet-facing) |
+| `aws_lb_target_group` | tg | Target group with HTTP health checks |
+| `aws_lb_target_group_attachment` | attach1, attach2 | Registers EC2 instances with target group |
+| `aws_lb_listener` | listener | Forwards HTTP traffic from ALB to target group |
 
 
 🔧 Prerequisites
