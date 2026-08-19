@@ -124,8 +124,8 @@ graph TB
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/bharathyk2004/aws-terraform-three-tier.git
-cd aws-terraform-three-tier
+git clone https://github.com/kavibhat/Terraform-project.git
+cd Terraform-project
 ```
 
 ### 2. Configure Variables
