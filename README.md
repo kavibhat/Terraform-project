@@ -25,7 +25,7 @@ A production-ready **three-tier cloud infrastructure** deployed on AWS using Ter
 
 ---
 
-## 🏗 Architecture
+🏗 Architecture
 
 ```mermaid
 graph TB
