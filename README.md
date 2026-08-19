@@ -58,6 +58,12 @@ graph TB
     EC2_1 & EC2_2 -.-> SG
 
 
+
+---
+
+### 📄 `docs/KEY_FEATURES.md`
+
+```markdown
 # Key Features
 
 - **High Availability**: Instances deployed in two separate Availability Zones (us-east-1a and us-east-1b).
@@ -68,8 +74,13 @@ graph TB
 - **Object Storage**: S3 bucket provisioned for static content, decoupling storage from compute.
 - **Auto-Healing**: Health checks ensure unhealthy instances are automatically taken out of rotation.
 - **Cost-Effective**: Using t2.micro instances and S3 keeps the environment within free tier limits.
+```
 
+---
 
+### 📄 `docs/RESOURCES.md`
+
+```markdown
 # Resources Created
 
 | Resource Type | Name | Description |
@@ -88,66 +99,100 @@ graph TB
 | `aws_lb_target_group` | tg | Target group with HTTP health checks |
 | `aws_lb_target_group_attachment` | attach1, attach2 | Registers EC2 instances with target group |
 | `aws_lb_listener` | listener | Forwards HTTP traffic from ALB to target group |
+```
 
+---
 
-🔧 Prerequisites
-Terraform ≥ 1.0 installed (Install Guide)
+### 📄 `docs/PREREQUISITES.md`
 
-AWS Account with programmatic access (Access Key ID & Secret Access Key)
+```markdown
+# Prerequisites
 
-AWS CLI configured locally (aws configure)
+- **Terraform** ≥ 1.0 installed ([Install Guide](https://learn.hashicorp.com/tutorials/terraform/install-cli))
+- **AWS Account** with programmatic access (Access Key ID & Secret Access Key)
+- **AWS CLI** configured locally (`aws configure`)
+- Basic understanding of AWS VPC, EC2, and ELB services
+```
 
-Basic understanding of AWS VPC, EC2, and ELB services
+---
 
+### 📄 `docs/GETTING_STARTED.md`
 
-🚀 Getting Started
-1. Clone the Repository
-bash
+````markdown
+# Getting Started
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/bharathyk2004/aws-terraform-three-tier.git
 cd aws-terraform-three-tier
-2. Configure Variables
-Create a terraform.tfvars file (or edit variables.tf defaults) with your desired VPC CIDR:
+```
 
-hcl
+### 2. Configure Variables
+
+Create a `terraform.tfvars` file (or edit `variables.tf` defaults) with your desired VPC CIDR:
+
+```hcl
 cidr = "10.0.0.0/16"
-3. Initialize Terraform
-bash
+```
+
+### 3. Initialize Terraform
+
+```bash
 terraform init
-This downloads the AWS provider and prepares the working directory.
+```
 
-4. Review the Plan
-bash
+### 4. Review the Plan
+
+```bash
 terraform plan
-Inspect the resources Terraform will create. Ensure the changes match your expectations.
+```
 
-5. Apply the Configuration
-bash
+### 5. Apply the Configuration
+
+```bash
 terraform apply
-Type yes when prompted. After successful apply, Terraform will output the ALB DNS name.
+```
 
-6. Access the Application
-bash
+Type `yes` when prompted. After successful apply, Terraform will output the ALB DNS name.
+
+### 6. Access the Application
+
+```bash
 terraform output loadbalancerdns
+```
+
 Open the DNS name in your browser. The load balancer will route traffic to one of the EC2 instances.
 
-7. Clean Up Resources
-To avoid incurring charges, destroy all resources when done:
+### 7. Clean Up Resources
 
-bash
+```bash
 terraform destroy
+```
+
+# Variables
+
+| Variable | Description | Type | Default |
+|----------|-------------|------|---------|
+| `cidr` | CIDR block for the VPC | `string` | `"10.0.0.0/16"` |
+
+Override via `terraform.tfvars` or `-var` flag:
+
+```hcl
+# terraform.tfvars
+cidr = "10.0.0.0/16"
 
 
-📝 Variables
-Variable	Description	Type	Default
-cidr	CIDR block for the VPC	string	"10.0.0.0/16"
-You can override this by creating a terraform.tfvars file or using -var flag.
+---
 
+### 📄 `docs/OUTPUTS.md`
 
-📤 Outputs
-Output	Description
-loadbalancerdns	Public DNS name of the Application Load Balancer
+```markdown
+# Outputs
 
-
+| Output | Description |
+|--------|-------------|
+| `loadbalancerdns` | Public DNS name of the Application Load Balancer |
 🔒 Security Configuration
 Security Group Rules
 Inbound:
@@ -164,40 +209,57 @@ Outbound: All traffic allowed (0.0.0.0/0) to enable updates and S3 access.
 🔐 HTTPS: Add an ACM certificate and listener on port 443 for encrypted traffic.
 
 
-📁 Project Structure
-text
+# Project Structure
+
+```
 .
 ├── main.tf              # Core infrastructure resources
 ├── variables.tf         # Input variable definitions
+├── outputs.tf           # Output values
 ├── terraform.tfvars     # Variable values (add to .gitignore)
 ├── userdata.sh          # Bootstrap script for web server 1
 ├── userdata1.sh         # Bootstrap script for web server 2
-├── outputs.tf           # Output values
-└── README.md            # Project documentation
-Note: The userdata.sh and userdata1.sh scripts should contain the commands to install and start your web server (e.g., Apache/Nginx).
+├── docs/                # Documentation files
+│   ├── ARCHITECTURE.md
+│   ├── KEY_FEATURES.md
+│   ├── RESOURCES.md
+│   ├── PREREQUISITES.md
+│   ├── GETTING_STARTED.md
+│   ├── VARIABLES.md
+│   ├── OUTPUTS.md
+│   ├── SECURITY.md
+│   ├── PROJECT_STRUCTURE.md
+│   ├── DESIGN_DECISIONS.md
+│   ├── FUTURE_ENHANCEMENTS.md
+│   ├── AUTHOR.md
+│   └── LICENSE.md
+└── README.md            # Main documentation
+```
 
 
-🧠 Design Decisions
-Public Subnets Only: Because the web servers need to serve traffic directly from the ALB, they reside in public subnets. A production three-tier architecture would typically place application servers in private subnets behind the ALB, with a NAT Gateway for outbound access. This project serves as a foundation for that evolution.
+# Design Decisions
 
-Two Availability Zones: Using two AZs ensures high availability; if one AZ fails, the other instance continues serving traffic.
+- **Public Subnets Only**: Because the web servers need to serve traffic directly from the ALB, they reside in public subnets. A production three-tier architecture would typically place application servers in private subnets behind the ALB, with a NAT Gateway for outbound access. This project serves as a foundation for that evolution.
 
-Application Load Balancer: Chosen over Classic Load Balancer for advanced routing, health checks, and integration with target groups.
+- **Two Availability Zones**: Using two AZs ensures high availability; if one AZ fails, the other instance continues serving traffic.
 
-S3 for Static Assets: Decouples static content from the web servers, improving performance and reducing load.
+- **Application Load Balancer**: Chosen over Classic Load Balancer for advanced routing, health checks, and integration with target groups.
 
-Terraform Modules Not Used: Kept simple for learning, but the code can be refactored into reusable modules.
+- **S3 for Static Assets**: Decouples static content from the web servers, improving performance and reducing load.
+
+- **Terraform Modules Not Used**: Kept simple for learning, but the code can be refactored into reusable modules.
 
 
-🔮 Future Enhancements
-□ Add private subnets and NAT Gateway for a true three-tier architecture
-□ Introduce Auto Scaling Group to replace static instances
-□ Add RDS database for dynamic data (replacing S3 static usage)
-□ Use remote state (S3 backend + DynamoDB lock) for team collaboration
-□ Add CloudWatch alarms and SNS notifications
-□ Implement HTTPS with ACM certificate and Route 53 DNS
-□ Containerize the application with ECS or EKS
-□ Create a CI/CD pipeline to automatically deploy changes
+# Future Enhancements
+
+- [ ] Add private subnets and NAT Gateway for a true three-tier architecture
+- [ ] Introduce Auto Scaling Group to replace static instances
+- [ ] Add RDS database for dynamic data (replacing S3 static usage)
+- [ ] Use remote state (S3 backend + DynamoDB lock) for team collaboration
+- [ ] Add CloudWatch alarms and SNS notifications
+- [ ] Implement HTTPS with ACM certificate and Route 53 DNS
+- [ ] Containerize the application with ECS or EKS
+- [ ] Create a CI/CD pipeline to automatically deploy changes
 
 
 👨‍💻 Author
