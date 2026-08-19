@@ -1,10 +1,11 @@
-AWS Three-Tier Infrastructure with Terraform
+AWS Infrastructure with Terraform
 
-(https://img.shields.io/badge/Terraform-1.5+-7B42BC?logo=terraform&logoColor=white)
-https://img.shields.io/badge/AWS-EC2%2520%257C%2520VPC%2520%257C%2520ALB%2520%257C%2520S3-FF9900?logo=amazonaws&logoColor=white
-https://img.shields.io/badge/License-MIT-blue.svg
+![Terraform](https://img.shields.io/badge/Terraform-1.5+-7B42BC?logo=terraform&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-EC2%2520%257C%2520VPC%2520%257C%2520ALB%2520%257C%2520S3-FF9900?logo=amazonaws&logoColor=white)
+![Badge](https://img.shields.io/badge/License-MIT-blue.svg)
 
 A production-ready three-tier cloud infrastructure deployed on AWS using Terraform. This project provisions a highly available web application with a multi-AZ setup, Application Load Balancer, and object storage. It demonstrates core cloud engineering principles: network isolation, high availability, fault tolerance, and Infrastructure as Code.
+
 
 📑 Table of Contents
 Architecture
@@ -31,6 +32,7 @@ Future Enhancements
 
 Author
 
+
 🏗 Architecture
 
 The architecture follows a three-tier pattern:
@@ -42,6 +44,7 @@ Application Tier: Two EC2 instances (web servers) spread across two Availability
 Data Tier: Amazon S3 bucket for storing static assets (images, files, etc.).
 
 All resources reside inside a dedicated VPC with public subnets, allowing outbound internet access through an Internet Gateway.
+
 
 ✨ Key Features
 High Availability: Instances deployed in two separate Availability Zones (us-east-1a and us-east-1b).
@@ -55,6 +58,7 @@ Network Isolation: Dedicated VPC, route tables, and security groups restrict acc
 Scalable Design: Easy to replace static EC2 instances with an Auto Scaling Group.
 
 Object Storage: S3 bucket provisioned for static content, decoupling storage from compute.
+
 
 📦 Resources Created
 Resource Type	Name	Description
@@ -72,6 +76,8 @@ aws_lb	myalb	Application Load Balancer (internet-facing)
 aws_lb_target_group	tg	Target group with HTTP health checks
 aws_lb_target_group_attachment	attach1, attach2	Registers EC2 instances with target group
 aws_lb_listener	listener	Forwards HTTP traffic from ALB to target group
+
+
 🔧 Prerequisites
 Terraform ≥ 1.0 installed (Install Guide)
 
@@ -80,6 +86,7 @@ AWS Account with programmatic access (Access Key ID & Secret Access Key)
 AWS CLI configured locally (aws configure)
 
 Basic understanding of AWS VPC, EC2, and ELB services
+
 
 🚀 Getting Started
 1. Clone the Repository
@@ -116,14 +123,19 @@ To avoid incurring charges, destroy all resources when done:
 
 bash
 terraform destroy
+
+
 📝 Variables
 Variable	Description	Type	Default
 cidr	CIDR block for the VPC	string	"10.0.0.0/16"
 You can override this by creating a terraform.tfvars file or using -var flag.
 
+
 📤 Outputs
 Output	Description
 loadbalancerdns	Public DNS name of the Application Load Balancer
+
+
 🔒 Security Configuration
 Security Group Rules
 Inbound:
@@ -133,9 +145,12 @@ Port	Protocol	Source	Description
 22	TCP	0.0.0.0/0	SSH access for administration
 Outbound: All traffic allowed (0.0.0.0/0) to enable updates and S3 access.
 
+
 ⚠️ Production Hardening: Restrict SSH (port 22) to only your IP address. Replace the 0.0.0.0/0 with your public IP or use a bastion host.
 
+
 🔐 HTTPS: Add an ACM certificate and listener on port 443 for encrypted traffic.
+
 
 📁 Project Structure
 text
@@ -149,6 +164,7 @@ text
 └── README.md            # Project documentation
 Note: The userdata.sh and userdata1.sh scripts should contain the commands to install and start your web server (e.g., Apache/Nginx).
 
+
 🧠 Design Decisions
 Public Subnets Only: Because the web servers need to serve traffic directly from the ALB, they reside in public subnets. A production three-tier architecture would typically place application servers in private subnets behind the ALB, with a NAT Gateway for outbound access. This project serves as a foundation for that evolution.
 
@@ -159,6 +175,7 @@ Application Load Balancer: Chosen over Classic Load Balancer for advanced routin
 S3 for Static Assets: Decouples static content from the web servers, improving performance and reducing load.
 
 Terraform Modules Not Used: Kept simple for learning, but the code can be refactored into reusable modules.
+
 
 🔮 Future Enhancements
 □ Add private subnets and NAT Gateway for a true three-tier architecture
