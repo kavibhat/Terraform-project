@@ -27,7 +27,6 @@ A production-ready **three-tier cloud infrastructure** deployed on AWS using Ter
 
 🏗 Architecture
 
-```mermaid
 graph TB
     Internet((Internet))
     ALB[Application Load Balancer<br/>Internet-facing]
